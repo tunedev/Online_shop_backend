@@ -4,7 +4,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { hasPermission } = require("../utils");
 const { transport, makeANiceMail } = require("../mail");
-const stripe = require("../stripe");
+const paystack = require("../paystack");
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -302,12 +302,8 @@ const Mutations = {
       0
     );
     // 3. Create the stripe charge
-    const charge = await stripe.charges.create({
-      amount: total * 100,
-      currency: "NGN",
-      source: token,
-    });
-    // 4. Convert the Cart Items to OrderItems
+    const charge = await paystack.transaction.verify(token);
+    // 4. Convrt the Cart Items to OrderItems
     const orderItems = user.cart.map((cartItem) => {
       const { title, price, image, largeImage, description } = cartItem.item;
       return {
@@ -323,8 +319,8 @@ const Mutations = {
     // 5. Create the order
     const order = await ctx.db.mutation.createOrder({
       data: {
-        charge: charge.id,
-        total: charge.amount,
+        charge: charge.data.id,
+        total: charge.data.amount / 100,
         items: { create: orderItems },
         user: { connect: { id: userId } },
       },

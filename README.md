@@ -2,6 +2,8 @@
 
 This is the backend of the online shop project. It entails following along a wesbos tutorial titled **Advanced React and GraphQL**. The aim is to learn how **Prisma** and **GraphQL Yoga**.
 
+Click [here](https://online-shop-yoga-prod.herokuapp.com/) to view the documentation of the backend in the graphql playground.
+
 # Features!
 
 - Sign up new user
