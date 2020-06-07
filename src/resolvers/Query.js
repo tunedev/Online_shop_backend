@@ -44,7 +44,7 @@ const Query = {
     const hasPermissionToSeeOrder = ctx.request.user.permission.includes(
       "ADMIN"
     );
-    if (!ownsOrder || !hasPermissionToSeeOrder) {
+    if (!ownsOrder && !hasPermissionToSeeOrder) {
       throw new Error("You do not have permissions to view this :(");
     }
     // 4. Return the order
